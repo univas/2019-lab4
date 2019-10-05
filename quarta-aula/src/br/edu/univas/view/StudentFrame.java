@@ -11,6 +11,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -121,15 +122,42 @@ public class StudentFrame extends JFrame {
 	}
 	
 	private void saveNewStudent() {
-		DefaultTableModel tableModel = (DefaultTableModel) studentTable.getModel();
-		
-		Object[] student = {
-				nameTextField.getText(), 
-				cpfTextField.getText(),
-				emailTextField.getText()
-		};
-		
-		tableModel.addRow(student);
+		if (validateFields()) {
+			Object[] student = {
+					nameTextField.getText(),
+					cpfTextField.getText(),
+					emailTextField.getText()
+			};
+
+			DefaultTableModel tableModel = (DefaultTableModel) studentTable.getModel();
+			tableModel.addRow(student);
+			clearFields();
+		}
 	}
 	
+	private boolean validateFields() {
+		if (nameTextField.getText() == null || nameTextField.getText().trim().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Por favor, preencha o nome", "Campo vazio", JOptionPane.WARNING_MESSAGE);
+			nameTextField.requestFocus();
+			return false;
+		}
+		if (cpfTextField.getText() == null || cpfTextField.getText().trim().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Por favor, preencha o CPF", "Campo vazio", JOptionPane.WARNING_MESSAGE);
+			cpfTextField.requestFocus();
+			return false;
+		}
+		if (emailTextField.getText() == null || emailTextField.getText().trim().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Por favor, preencha o e-mail", "Campo vazio", JOptionPane.WARNING_MESSAGE);
+			emailTextField.requestFocus();
+			return false;
+		}
+		return true;
+	}
+
+	private void clearFields() {
+		nameTextField.requestFocus();
+		nameTextField.setText(null);
+		cpfTextField.setText(null);
+		emailTextField.setText(null);
+	}
 }
