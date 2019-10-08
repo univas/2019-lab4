@@ -1,33 +1,23 @@
 package br.edu.univas.view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
-
-import br.edu.univas.vo.Student;
 
 public class StudentFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField nameTextField;
-	private JTextField cpfTextField; 
-	private JTextField emailTextField;
-	private JTable studentTable;
+	private JPanel centerPanel;
+	private StudentList listPanel;
+	private AddStudent addPanel;
 	
 	public StudentFrame() {
 		setSize(800, 640);
@@ -39,125 +29,57 @@ public class StudentFrame extends JFrame {
 	
 	private void initialize() {
 		contentPane = new JPanel();
-		contentPane.setLayout(new GridBagLayout());
+		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		GridBagConstraints gbc = new GridBagConstraints();
 		
-		JLabel nameLabel = new JLabel();
-		nameLabel.setText("Nome:");
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.insets = new Insets(15, 15, 15, 15);
-		contentPane.add(nameLabel, gbc);
+		addPanel = new AddStudent();
+		listPanel = new StudentList();
 		
-		nameTextField = new JTextField();
-		gbc.gridx = 1;
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		contentPane.add(nameTextField, gbc);
+		createNorthPanel();
+		centerPanel = new JPanel();
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.add(listPanel);
+		contentPane.add(centerPanel, BorderLayout.CENTER);
+	}
+	
+	private void createNorthPanel() {
+		JPanel northPanel = new JPanel();
+		northPanel.setPreferredSize(new Dimension(800, 140));
+		northPanel.setBackground(Color.GRAY);
 		
-		JLabel cpfLabel = new JLabel();
-		cpfLabel.setText("CPF:");
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.weightx = 0.0;
-		gbc.fill = GridBagConstraints.NONE;
-		contentPane.add(cpfLabel, gbc);
-		
-		cpfTextField = new JTextField();
-		gbc.gridx = 1;
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		contentPane.add(cpfTextField, gbc);
-		
-		JLabel emailLabel = new JLabel();
-		emailLabel.setText("E-mail:");
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.weightx = 0.0;
-		gbc.fill = GridBagConstraints.NONE;
-		contentPane.add(emailLabel, gbc);
-		
-		emailTextField = new JTextField();
-		gbc.gridx = 1;
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		contentPane.add(emailTextField, gbc);
-		
-		JButton saveButton = new JButton();
-		saveButton.setText("Salvar");
-		saveButton.addActionListener(new ActionListener() {
+		JButton addButton = new JButton();
+		addButton.setPreferredSize(new Dimension(100, 100));
+		ImageIcon image1 = new ImageIcon(getClass().getResource("/add.png"));
+		addButton.setIcon(image1);
+		addButton.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveNewStudent();
+				centerPanel.removeAll();
+				centerPanel.add(addPanel);
+				centerPanel.revalidate();
+				StudentFrame.this.repaint();
 			}
 		});
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.gridwidth = 2;
-		gbc.weightx = 0.0;
-		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.fill = GridBagConstraints.NONE;
-		contentPane.add(saveButton, gbc);
+		northPanel.add(addButton);
 		
-		Vector<String> columnNames = new Vector<String>();
-		columnNames.add("Nome");
-		columnNames.add("CPF");
-		columnNames.add("E-mail");
-		Vector<Student> vector = new Vector<Student>();
-		studentTable = new JTable(vector, columnNames);
-		JScrollPane studentTableScroll = new JScrollPane(studentTable);
-		studentTableScroll.setHorizontalScrollBarPolicy(
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		studentTableScroll.setVerticalScrollBarPolicy(
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		studentTableScroll.setMinimumSize(new Dimension(750, 300));
-		gbc.gridx = 0;
-		gbc.gridy = 4;
-		gbc.gridwidth = 2;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.fill = GridBagConstraints.BOTH;
-		contentPane.add(studentTableScroll, gbc);
+		JButton listButton = new JButton();
+		listButton.setPreferredSize(new Dimension(100, 100));
+		ImageIcon image2 = new ImageIcon(getClass().getResource("/list.png"));
+		listButton.setIcon(image2);
+		listButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				centerPanel.removeAll();
+				centerPanel.add(listPanel);
+				centerPanel.revalidate();
+				StudentFrame.this.repaint();
+			}
+		});
+		northPanel.add(listButton);
+		
+		contentPane.add(northPanel, BorderLayout.NORTH);
 	}
 	
-	private void saveNewStudent() {
-		if (validateFields()) {
-			Object[] student = {
-					nameTextField.getText(),
-					cpfTextField.getText(),
-					emailTextField.getText()
-			};
-
-			DefaultTableModel tableModel = (DefaultTableModel) studentTable.getModel();
-			tableModel.addRow(student);
-			clearFields();
-		}
-	}
-	
-	private boolean validateFields() {
-		if (nameTextField.getText() == null || nameTextField.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Por favor, preencha o nome", "Campo vazio", JOptionPane.WARNING_MESSAGE);
-			nameTextField.requestFocus();
-			return false;
-		}
-		if (cpfTextField.getText() == null || cpfTextField.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Por favor, preencha o CPF", "Campo vazio", JOptionPane.WARNING_MESSAGE);
-			cpfTextField.requestFocus();
-			return false;
-		}
-		if (emailTextField.getText() == null || emailTextField.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Por favor, preencha o e-mail", "Campo vazio", JOptionPane.WARNING_MESSAGE);
-			emailTextField.requestFocus();
-			return false;
-		}
-		return true;
-	}
-
-	private void clearFields() {
-		nameTextField.requestFocus();
-		nameTextField.setText(null);
-		cpfTextField.setText(null);
-		emailTextField.setText(null);
-	}
 }
