@@ -12,13 +12,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import br.edu.univas.dao.StudentDAO;
+import br.edu.univas.vo.Student;
+
 public class AddStudent extends JPanel {
 
 	private JTextField nameTextField;
 	private JTextField cpfTextField; 
 	private JTextField emailTextField;
+	private StudentDAO studentDAO;
 	
 	public AddStudent() {
+		studentDAO = new StudentDAO();
 		initialize();
 	}
 	
@@ -87,7 +92,15 @@ public class AddStudent extends JPanel {
 	private void saveNewStudent() {
 		if (validateFields()) {
 
+			Student student = new Student();
+			student.setName(nameTextField.getText());
+			student.setCpf(cpfTextField.getText());
+			student.setEmail(emailTextField.getText());
+			studentDAO.save(student);
+			
 			clearFields();
+			JOptionPane.showMessageDialog(this, "Aluno cadastrado com sucesso!",
+										"Sucesso", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	

@@ -71,6 +71,7 @@ public class StudentFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				listPanel.updateTable();
 				centerPanel.removeAll();
 				centerPanel.add(listPanel);
 				centerPanel.revalidate();

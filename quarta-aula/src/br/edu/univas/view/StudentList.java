@@ -10,14 +10,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableModel;
 
+import br.edu.univas.dao.StudentDAO;
 import br.edu.univas.vo.Student;
 
 public class StudentList extends JPanel {
 
 	private JTable studentTable;
+	private StudentDAO studentDAO;
 	
 	public StudentList() {
+		studentDAO = new StudentDAO();
 		initialize();
 	}
 	
@@ -37,7 +41,8 @@ public class StudentList extends JPanel {
 		columnNames.add("Nome");
 		columnNames.add("CPF");
 		columnNames.add("E-mail");
-		Vector<Student> vector = new Vector<Student>();
+		//Vector<Student> vector = new Vector<Student>();
+		Vector<? extends Vector> vector = new Vector();
 		studentTable = new JTable(vector, columnNames);
 		JScrollPane studentTableScroll = new JScrollPane(studentTable);
 		studentTableScroll.setHorizontalScrollBarPolicy(
@@ -52,6 +57,21 @@ public class StudentList extends JPanel {
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.fill = GridBagConstraints.BOTH;
 		this.add(studentTableScroll, gbc);
+	}
+	
+	public void updateTable() {
+		DefaultTableModel tableModel = (DefaultTableModel) studentTable.getModel();
+		tableModel.setRowCount(0);
+		
+		for (Student student : studentDAO.getAll()) {
+			Object[] data = {
+					student.getName(),
+					student.getCpf(),
+					student.getEmail()
+			};
+			
+			tableModel.addRow(data);
+		}
 	}
 	
 }
