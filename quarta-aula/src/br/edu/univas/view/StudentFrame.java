@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,8 +33,13 @@ public class StudentFrame extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 		
-		addPanel = new AddStudent();
-		listPanel = new StudentList();
+		try {
+			addPanel = new AddStudent();
+			listPanel = new StudentList();
+			listPanel.updateTable();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		createNorthPanel();
 		centerPanel = new JPanel();

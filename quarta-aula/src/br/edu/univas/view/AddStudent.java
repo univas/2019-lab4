@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -22,7 +23,7 @@ public class AddStudent extends JPanel {
 	private JTextField emailTextField;
 	private StudentDAO studentDAO;
 	
-	public AddStudent() {
+	public AddStudent() throws SQLException {
 		studentDAO = new StudentDAO();
 		initialize();
 	}

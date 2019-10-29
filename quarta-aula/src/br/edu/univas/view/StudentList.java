@@ -3,6 +3,7 @@ package br.edu.univas.view;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.JLabel;
@@ -20,7 +21,7 @@ public class StudentList extends JPanel {
 	private JTable studentTable;
 	private StudentDAO studentDAO;
 	
-	public StudentList() {
+	public StudentList() throws SQLException {
 		studentDAO = new StudentDAO();
 		initialize();
 	}
